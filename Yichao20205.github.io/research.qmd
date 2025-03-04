@@ -1,0 +1,6 @@
+---
+title: "research"
+format: html
+---
+
+[EPPS 6323 presentation](https://cometmail-my.sharepoint.com/:p:/g/personal/yxj200005_utdallas_edu/EfzJAAleO4NOh0yLNNv015IBALiRi8s0H6_3OdDAzb_ASw?e=MiLh4e "Estimating Hyperbolic Time Discount Rate for Covid-like Diseases Vaccination: A Discrete Choice Experiment in Three Counties of Wuhan")
