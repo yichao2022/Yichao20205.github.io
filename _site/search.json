@@ -33,5 +33,12 @@
     "title": "project",
     "section": "",
     "text": "Prepare for Class 6"
+  },
+  {
+    "objectID": "assignment4.html",
+    "href": "assignment4.html",
+    "title": "assignment4",
+    "section": "",
+    "text": "Similarities and Differences:\n\nSimilarities: Both may emphasize dialogue, cooperation, and peace, with common themes like national interests and economic stability.\nDifferences: Summit texts focus on US-China relations, while inaugural speeches are more general, covering the state of the nation and future plans, often with a rhetorical, unifying tone.\n\nFor example, Biden’s 2021 inaugural address, as noted, focused on unity and democracy, with general international references but no specific mention of China, highlighting the broader scope compared to summit specifics.\nWhat is Wordfish: \nWordfish is identified as a Poisson scaling model for one-dimensional document positioning, detailed in Slapin and Proksch (2008), available at American Journal of Political Science. It is an unsupervised method, meaning it doesn’t require pre-labeled data, and uses word frequencies to estimate positions, assuming a Poisson distribution. This is particularly useful in political science for measuring ideological stances, such as placing political speeches on a left-right spectrum based on word usage.\nComparing Positions Using Wordfish and Scaling Methods:\nScaling methods, in general, reduce text data dimensionality for comparison, with Wordfish being specific to text, while others like PCA or t-SNE are more general."
   }
 ]

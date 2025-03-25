@@ -22,6 +22,8 @@ website:
            text: assignment2
          - href: assignment3.qmd
            text: assignment3
+         - href: assignment4.qmd
+           text: assignment4
 format:
   html:
     theme: cosmo
