@@ -1,3 +1,11 @@
+```{python}
+
+```
+
+```{python}
+
+```
+
 ---
 title: "assignment4"
 format: html

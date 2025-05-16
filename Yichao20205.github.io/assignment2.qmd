@@ -3,3 +3,113 @@ title: "assignment2"
 format: html
 ---
 
+1.  Lab01, Lab02 in R (Rendering and Uploading to GitHub)
+
+<!-- -->
+
+a.  Render and Upload Files to GitHub To render .qmd files and upload them to GitHub:
+
+Render .qmd Files: Open Lab01.qmd and Lab02.qmd in RStudio. Ensure you have the quarto package installed: install.packages("quarto"). Click the "Render" button in RStudio or run quarto::quarto_render("Lab01.qmd") and quarto::quarto_render("Lab02.qmd"). This generates Lab01.html, Lab01_files/ (folder with assets), Lab02.html, and Lab02_files/. Upload to GitHub: Create a GitHub repository (e.g., DataAnalysisLabs) if you haven't already. Initialize a local Git repository in your project folder: bash
+
+Copy git init git add Lab01.qmd Lab01.html Lab01_files/ Lab02.qmd Lab02.html Lab02_files/ git commit -m "Add Lab01 and Lab02 files" Link to your GitHub repository and push: bash
+
+Copy git remote add origin <your-repo-url> git push -u origin main Verify on the GitHub website that all files and folders (Lab01.html, Lab01_files/, etc.) are uploaded. b. Ensure Associated Folders Are Uploaded The Lab01_files/ and Lab02_files/ folders contain assets (e.g., images, CSS) needed for the HTML files to render correctly. When adding files to Git, ensure these folders are included (as shown in the git add command above). Check .gitignore to confirm these folders aren't excluded. If they are, remove Lab\*\_files/ from .gitignore. Tip: If the HTML files don't render properly on GitHub Pages, ensure the folder structure is preserved and use relative paths in your .qmd files.
+
+2.  Review Chapters 3–7 in R4DS, Section 3.5 in Data Programming R for Data Science (R4DS) Chapters 3–7 cover: Ch. 3: Data visualization with ggplot2 (e.g., scatterplots, bar charts). Ch. 4: Workflow basics (coding style, debugging). Ch. 5: Data transformation with dplyr (filter, arrange, select, mutate, summarize). Ch. 6: Workflow scripts and projects. Ch. 7: Exploratory Data Analysis (EDA) (visualizing distributions, relationships, handling missing data). Section 3.5 in Data Programming (assuming this refers to a specific text or course material) likely focuses on EDA techniques, such as summarizing data, visualizing distributions, or handling outliers. Run EDA on TEDS2016 Dataset Here's a sample EDA using the provided code to load the TEDS2016 dataset:
+
+R
+
+Copy library(haven) library(tidyverse)
+
+# Load dataset
+
+TEDS_2016 \<- read_stata("https://github.com/datageneration/home/blob/master/DataProgramming/data/TEDS_2016.dta?raw=true")
+
+# Basic EDA
+
+# 1. Summary statistics
+
+summary(TEDS_2016)
+
+# 2. Check structure
+
+str(TEDS_2016)
+
+# 3. Visualize a key variable (e.g., Tondu)
+
+ggplot(TEDS_2016, aes(x = Tondu)) + geom_histogram(stat = "count") + theme_minimal() + labs(title = "Distribution of Tondu")
+
+# 4. Check for missing values
+
+colSums(is.na(TEDS_2016))
+
+# 5. Example: Relationship between Tondu and age
+
+ggplot(TEDS_2016, aes(x = age, y = Tondu)) + geom_point() + theme_minimal() + labs(title = "Tondu vs. Age") This code provides a starting point for EDA, including summary statistics, structure inspection, and basic visualizations.
+
+3.  Problems Encountered with the TEDS2016 Dataset Common issues when working with this dataset include:
+
+Data Loading Issues: The URL may fail if GitHub changes raw file access. If the read_stata command fails, download the .dta file locally and load it with read_stata("path/to/TEDS_2016.dta"). File size or network issues may cause slow loading. Missing Values: Many variables (e.g., Tondu, income) may have missing values (NA or coded as specific values like 99). Check with colSums(is.na(TEDS_2016)) or table(TEDS_2016$Tondu, useNA = "always").
+Variable Coding:
+Variables like Tondu may be numeric but represent categorical responses (e.g., 1 = "Unification now"). Without labels, interpretation is challenging.
+Use attributes(TEDS_2016$Tondu) to check for value labels. Data Types: Some variables may load as haven_labelled (from haven), requiring conversion to factors or numeric for analysis (e.g., as_factor(TEDS_2016\$Tondu)). Outliers or Inconsistent Data: Variables like age or income may have outliers (e.g., age \> 100 or negative values). Use summary() or boxplot() to identify anomalies. 4. Dealing with Missing Values Strategies for handling missing values in the TEDS2016 dataset:
+
+Identify Missing Values: R
+
+Copy colSums(is.na(TEDS_2016)) \# For specific variables table(TEDS_2016\$Tondu, useNA = "always") Remove Missing Values: If missing values are minimal, remove rows: R
+
+Copy TEDS_2016_clean \<- TEDS_2016 %\>% drop_na(Tondu, age, income) Alternatively, remove only for specific analyses: R
+
+Copy TEDS_2016 %\>% filter(!is.na(Tondu)) %\>% ggplot(aes(x = Tondu)) + geom_bar() Impute Missing Values: Categorical Variables (e.g., Tondu): Impute with mode or a separate "Missing" category. R
+
+Copy TEDS_2016$Tondu[is.na(TEDS_2016$Tondu)\] \<- "No response" Numeric Variables (e.g., age): Impute with mean or median. R
+
+Copy TEDS_2016$age[is.na(TEDS_2016$age)\] \<- median(TEDS_2016\$age, na.rm = TRUE) Flag Missing Values: Create a new variable to track missingness: R
+
+Copy TEDS_2016$Tondu_missing <- is.na(TEDS_2016$Tondu) Model-Based Imputation: Use packages like mice for multiple imputation if missingness is complex: R
+
+Copy library(mice) imputed_data \<- mice(TEDS_2016, m = 5, method = "pmm") TEDS_2016_imputed \<- complete(imputed_data) Recommendation: Start by exploring the extent of missingness (colSums(is.na(TEDS_2016))). If missing values are minimal, use drop_na() for simplicity. For critical variables like Tondu, consider labeling missing values as "No response" to retain data.
+
+5.  Explore Relationships Between Tondu and Other Variables To explore relationships between Tondu (a measure of unification/independence preference) and variables like female, DPP, age, income, edu, Taiwanese, and Econ_worse:
+
+Methods to Use Descriptive Statistics: Cross-tabulations for categorical variables: R
+
+Copy table(TEDS_2016$Tondu, TEDS_2016$female) table(TEDS_2016$Tondu, TEDS_2016$DPP) Visualizations: Bar Charts for categorical variables: R
+
+Copy ggplot(TEDS_2016, aes(x = Tondu, fill = as_factor(female))) + geom_bar(position = "dodge") + labs(title = "Tondu by Gender") Boxplots for numeric variables: R
+
+Copy ggplot(TEDS_2016, aes(x = as_factor(Tondu), y = age)) + geom_boxplot() + labs(title = "Age Distribution by Tondu") Statistical Tests: Chi-Square Test for categorical variables (e.g., Tondu vs. female): R
+
+Copy chisq.test(table(TEDS_2016$Tondu, TEDS_2016$female)) ANOVA or t-tests for numeric variables (e.g., age across Tondu levels): R
+
+Copy anova(lm(age \~ as_factor(Tondu), data = TEDS_2016)) Correlation Analysis: For numeric variables (e.g., age, income): R
+
+Copy cor(TEDS_2016$age, TEDS_2016$income, use = "complete.obs") Regression Models: Use logistic regression if Tondu is treated as binary (e.g., unification vs. independence): R
+
+Copy TEDS_2016$Tondu_binary <- ifelse(TEDS_2016$Tondu %in% c(1, 2), "Unification", "Other") model \<- glm(Tondu_binary \~ female + age + income, data = TEDS_2016, family = binomial) summary(model) Use multinomial regression for multi-level Tondu (requires nnet package). Recommendation: Start with visualizations (bar charts, boxplots) to identify patterns, then use chi-square tests for categorical variables and ANOVA for numeric ones. Convert Tondu to a factor with meaningful labels for clarity.
+
+6.  Explore the votetsai Variable (Vote for DPP Candidate Tsai Ing-wen) To analyze votetsai (likely a binary or categorical variable indicating whether the respondent voted for Tsai Ing-wen):
+
+EDA for votetsai: R
+
+Copy table(TEDS_2016\$votetsai, useNA = "always") ggplot(TEDS_2016, aes(x = as_factor(votetsai))) + geom_bar() + labs(title = "Distribution of votetsai") Relationship with Tondu: Cross-tabulation and chi-square test: R
+
+Copy table(TEDS_2016$votetsai, TEDS_2016$Tondu) chisq.test(table(TEDS_2016$votetsai, TEDS_2016$Tondu)) Stacked bar chart: R
+
+Copy ggplot(TEDS_2016, aes(x = as_factor(Tondu), fill = as_factor(votetsai))) + geom_bar(position = "fill") + labs(title = "votetsai by Tondu", y = "Proportion") Logistic Regression: If votetsai is binary (1 = voted for Tsai, 0 = did not): R
+
+Copy model_votetsai \<- glm(votetsai \~ Tondu + female + age + income, data = TEDS_2016, family = binomial) summary(model_votetsai) Recommendation: Focus on the relationship between votetsai and Tondu, as political ideology likely influences voting. Use visualizations and chi-square tests to confirm associations.
+
+7.  Frequency Table and Bar Chart for Tondu with Labels To generate a frequency table and bar chart for Tondu with the specified labels:
+
+R
+
+Copy \# Assign labels to Tondu TEDS_2016$Tondu <- factor(TEDS_2016$Tondu, levels = 1:7, labels = c("Unification now", "Status quo, unif. in future", "Status quo, decide later", "Status quo forever", "Status quo, indep. in future", "Independence now", "No response"))
+
+# Frequency table
+
+table(TEDS_2016\$Tondu, useNA = "always")
+
+# Bar chart
+
+ggplot(TEDS_2016, aes(x = Tondu)) + geom_bar() + theme_minimal() + theme(axis.text.x = element_text(angle = 45, hjust = 1)) + labs(title = "Frequency of Tondu Responses", x = "Tondu", y = "Count") Notes:
